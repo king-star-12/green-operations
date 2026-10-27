@@ -1,36 +1,678 @@
 {
   "schema": "green-operations/summary/v1",
-  "generated_at": "2026-10-27T11:53:08.746Z",
-  "state": "before_baseline",
-  "runs": [],
-  "comparisons": [],
+  "generated_at": "2026-10-27T12:15:24.501Z",
+  "state": "verified",
+  "arms": [
+    "consolidated",
+    "optimized"
+  ],
+  "runs": [
+    {
+      "arm": "baseline",
+      "id": 2994169833,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 74,
+      "runner_minutes": 1.27,
+      "jobs": {
+        "executed": 5,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/baseline",
+      "finished_at": "2026-10-27T11:54:39.782Z",
+      "provisional": false
+    },
+    {
+      "arm": "baseline",
+      "id": 2994185245,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 75,
+      "runner_minutes": 1.27,
+      "jobs": {
+        "executed": 5,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/baseline",
+      "finished_at": "2026-10-27T11:57:51.276Z",
+      "provisional": false
+    },
+    {
+      "arm": "baseline",
+      "id": 2994185489,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 78,
+      "runner_minutes": 1.3,
+      "jobs": {
+        "executed": 5,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/baseline",
+      "finished_at": "2026-10-27T11:57:57.083Z",
+      "provisional": false
+    },
+    {
+      "arm": "baseline",
+      "id": 2994195319,
+      "change_class": "docs",
+      "status": "success",
+      "duration_s": 76,
+      "runner_minutes": 1.27,
+      "jobs": {
+        "executed": 5,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994195319",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/baseline",
+      "finished_at": "2026-10-27T11:59:57.771Z",
+      "provisional": false
+    },
+    {
+      "arm": "baseline",
+      "id": 2994239357,
+      "change_class": "docs",
+      "status": "success",
+      "duration_s": 82,
+      "runner_minutes": 1.37,
+      "jobs": {
+        "executed": 5,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994239357",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/baseline",
+      "finished_at": "2026-10-27T12:08:16.403Z",
+      "provisional": false
+    },
+    {
+      "arm": "consolidated",
+      "id": 2994258534,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 57,
+      "runner_minutes": 0.95,
+      "jobs": {
+        "executed": 3,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258534",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/consolidated",
+      "finished_at": "2026-10-27T12:11:05.944Z",
+      "provisional": false
+    },
+    {
+      "arm": "consolidated",
+      "id": 2994263580,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 50,
+      "runner_minutes": 0.85,
+      "jobs": {
+        "executed": 3,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994263580",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/consolidated",
+      "finished_at": "2026-10-27T12:12:04.308Z",
+      "provisional": false
+    },
+    {
+      "arm": "consolidated",
+      "id": 2994268064,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 50,
+      "runner_minutes": 0.85,
+      "jobs": {
+        "executed": 3,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994268064",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/consolidated",
+      "finished_at": "2026-10-27T12:13:04.937Z",
+      "provisional": false
+    },
+    {
+      "arm": "consolidated",
+      "id": 2994277140,
+      "change_class": "docs",
+      "status": "success",
+      "duration_s": 48,
+      "runner_minutes": 0.82,
+      "jobs": {
+        "executed": 3,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994277140",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "evidence/consolidated",
+      "finished_at": "2026-10-27T12:14:52.178Z",
+      "provisional": false
+    },
+    {
+      "arm": "optimized",
+      "id": 2994191951,
+      "change_class": "docs",
+      "status": "success",
+      "duration_s": 80,
+      "runner_minutes": 1.03,
+      "jobs": {
+        "executed": 4,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 0,
+        "cache_miss": 1
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994191951",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "main",
+      "finished_at": "2026-10-27T11:59:21.627Z",
+      "provisional": false
+    },
+    {
+      "arm": "optimized",
+      "id": 2994208555,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 122,
+      "runner_minutes": 1.7,
+      "jobs": {
+        "executed": 6,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 3,
+        "cache_miss": 1
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994208555",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "main",
+      "finished_at": "2026-10-27T12:03:28.704Z",
+      "provisional": false
+    },
+    {
+      "arm": "optimized",
+      "id": 2994212567,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 118,
+      "runner_minutes": 1.67,
+      "jobs": {
+        "executed": 6,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 4,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994212567",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "main",
+      "finished_at": "2026-10-27T12:04:16.198Z",
+      "provisional": false
+    },
+    {
+      "arm": "optimized",
+      "id": 2994224815,
+      "change_class": "code",
+      "status": "success",
+      "duration_s": 120,
+      "runner_minutes": 1.7,
+      "jobs": {
+        "executed": 6,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 4,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994224815",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "main",
+      "finished_at": "2026-10-27T12:06:40.963Z",
+      "provisional": false
+    },
+    {
+      "arm": "optimized",
+      "id": 2994258335,
+      "change_class": "docs",
+      "status": "success",
+      "duration_s": 76,
+      "runner_minutes": 0.98,
+      "jobs": {
+        "executed": 4,
+        "skipped": 0,
+        "failed": 0,
+        "cache_hit": 1,
+        "cache_miss": 0
+      },
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258335",
+      "runner_class": "saas-linux-small-amd64",
+      "ref": "main",
+      "finished_at": "2026-10-27T12:11:29.220Z",
+      "provisional": false
+    }
+  ],
+  "comparisons": [
+    {
+      "arm": "consolidated",
+      "change_class": "code",
+      "comparable": true,
+      "reasons": [],
+      "functional_unit": "one successful, equivalent CI pipeline run that validates the same change",
+      "baseline": {
+        "samples": 3,
+        "successful": 3,
+        "median_duration_s": 75,
+        "median_runner_minutes": 1.2666666666666666,
+        "median_jobs_executed": 5,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489"
+        ]
+      },
+      "optimized": {
+        "samples": 3,
+        "successful": 3,
+        "median_duration_s": 50,
+        "median_runner_minutes": 0.85,
+        "median_jobs_executed": 3,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258534",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994263580",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994268064"
+        ]
+      },
+      "metrics": {
+        "duration_s": {
+          "baseline": 75,
+          "optimized": 50,
+          "reduction_pct": 33.33333333333333,
+          "kind": "measured",
+          "unit": "s"
+        },
+        "runner_minutes": {
+          "baseline": 1.2666666666666666,
+          "optimized": 0.85,
+          "reduction_pct": 32.89473684210526,
+          "kind": "proxy",
+          "unit": "runner-min"
+        },
+        "jobs_executed": {
+          "baseline": 5,
+          "optimized": 3,
+          "reduction_pct": 40,
+          "kind": "counted",
+          "unit": "jobs"
+        },
+        "energy_kwh": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "kWh"
+        },
+        "sci_gco2e_per_run": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "gCO2e/run"
+        }
+      },
+      "cache": {
+        "baseline": {
+          "hit": 0,
+          "miss": 0
+        },
+        "optimized": {
+          "hit": 0,
+          "miss": 0
+        }
+      }
+    },
+    {
+      "arm": "consolidated",
+      "change_class": "docs",
+      "comparable": true,
+      "reasons": [],
+      "functional_unit": "one successful, equivalent CI pipeline run that validates the same change",
+      "baseline": {
+        "samples": 2,
+        "successful": 2,
+        "median_duration_s": 79,
+        "median_runner_minutes": 1.3166666666666667,
+        "median_jobs_executed": 5,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994195319",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994239357"
+        ]
+      },
+      "optimized": {
+        "samples": 1,
+        "successful": 1,
+        "median_duration_s": 48,
+        "median_runner_minutes": 0.8166666666666667,
+        "median_jobs_executed": 3,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994277140"
+        ]
+      },
+      "metrics": {
+        "duration_s": {
+          "baseline": 79,
+          "optimized": 48,
+          "reduction_pct": 39.24050632911392,
+          "kind": "measured",
+          "unit": "s"
+        },
+        "runner_minutes": {
+          "baseline": 1.3166666666666667,
+          "optimized": 0.8166666666666667,
+          "reduction_pct": 37.9746835443038,
+          "kind": "proxy",
+          "unit": "runner-min"
+        },
+        "jobs_executed": {
+          "baseline": 5,
+          "optimized": 3,
+          "reduction_pct": 40,
+          "kind": "counted",
+          "unit": "jobs"
+        },
+        "energy_kwh": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "kWh"
+        },
+        "sci_gco2e_per_run": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "gCO2e/run"
+        }
+      },
+      "cache": {
+        "baseline": {
+          "hit": 0,
+          "miss": 0
+        },
+        "optimized": {
+          "hit": 0,
+          "miss": 0
+        }
+      }
+    },
+    {
+      "arm": "optimized",
+      "change_class": "code",
+      "comparable": true,
+      "reasons": [],
+      "functional_unit": "one successful, equivalent CI pipeline run that validates the same change",
+      "baseline": {
+        "samples": 3,
+        "successful": 3,
+        "median_duration_s": 75,
+        "median_runner_minutes": 1.2666666666666666,
+        "median_jobs_executed": 5,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489"
+        ]
+      },
+      "optimized": {
+        "samples": 3,
+        "successful": 3,
+        "median_duration_s": 120,
+        "median_runner_minutes": 1.7,
+        "median_jobs_executed": 6,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994208555",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994212567",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994224815"
+        ]
+      },
+      "metrics": {
+        "duration_s": {
+          "baseline": 75,
+          "optimized": 120,
+          "reduction_pct": -60,
+          "kind": "measured",
+          "unit": "s"
+        },
+        "runner_minutes": {
+          "baseline": 1.2666666666666666,
+          "optimized": 1.7,
+          "reduction_pct": -34.21052631578947,
+          "kind": "proxy",
+          "unit": "runner-min"
+        },
+        "jobs_executed": {
+          "baseline": 5,
+          "optimized": 6,
+          "reduction_pct": -20,
+          "kind": "counted",
+          "unit": "jobs"
+        },
+        "energy_kwh": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "kWh"
+        },
+        "sci_gco2e_per_run": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "gCO2e/run"
+        }
+      },
+      "cache": {
+        "baseline": {
+          "hit": 0,
+          "miss": 0
+        },
+        "optimized": {
+          "hit": 11,
+          "miss": 1
+        }
+      }
+    },
+    {
+      "arm": "optimized",
+      "change_class": "docs",
+      "comparable": true,
+      "reasons": [],
+      "functional_unit": "one successful, equivalent CI pipeline run that validates the same change",
+      "baseline": {
+        "samples": 2,
+        "successful": 2,
+        "median_duration_s": 79,
+        "median_runner_minutes": 1.3166666666666667,
+        "median_jobs_executed": 5,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994195319",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994239357"
+        ]
+      },
+      "optimized": {
+        "samples": 2,
+        "successful": 2,
+        "median_duration_s": 78,
+        "median_runner_minutes": 1.0083333333333333,
+        "median_jobs_executed": 4,
+        "runner_classes": [
+          "saas-linux-small-amd64"
+        ],
+        "run_urls": [
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994191951",
+          "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258335"
+        ]
+      },
+      "metrics": {
+        "duration_s": {
+          "baseline": 79,
+          "optimized": 78,
+          "reduction_pct": 1.2658227848101267,
+          "kind": "measured",
+          "unit": "s"
+        },
+        "runner_minutes": {
+          "baseline": 1.3166666666666667,
+          "optimized": 1.0083333333333333,
+          "reduction_pct": 23.417721518987346,
+          "kind": "proxy",
+          "unit": "runner-min"
+        },
+        "jobs_executed": {
+          "baseline": 5,
+          "optimized": 4,
+          "reduction_pct": 20,
+          "kind": "counted",
+          "unit": "jobs"
+        },
+        "energy_kwh": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "kWh"
+        },
+        "sci_gco2e_per_run": {
+          "baseline": "UNKNOWN",
+          "optimized": "UNKNOWN",
+          "reduction_pct": null,
+          "kind": "UNKNOWN",
+          "unit": "gCO2e/run"
+        }
+      },
+      "cache": {
+        "baseline": {
+          "hit": 0,
+          "miss": 0
+        },
+        "optimized": {
+          "hit": 1,
+          "miss": 1
+        }
+      }
+    }
+  ],
   "ledger": [
     {
       "id": "OPT-1",
       "change": "Cache npm dependencies keyed on package-lock.json with an `npm-default` fallback key; `lint` pushes the cache, other jobs pull it.",
       "expected_effect": "Fewer repeated package downloads per job; shorter `npm ci` phase. Effect is measured as runner-minutes (proxy) and pipeline duration (measured).",
       "risk": "Low. A stale cache cannot change what is installed because npm ci still verifies against the lockfile; a cache miss only falls back to a full download.",
-      "evidence": [],
-      "state": "applied",
-      "verified_by": "code"
+      "evidence": [
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994208555",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994212567",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994224815"
+      ],
+      "state": "regressed",
+      "verified_by": "code",
+      "arm": "optimized",
+      "measured_result": "+34.2% runner-minutes (proxy), 5→6 jobs, class code, 3/3 runs"
     },
     {
       "id": "OPT-2",
       "change": "Documentation-only changes skip lint/test/build. An explicit `classify` job diffs the whole pushed range with git, fails safe to \"code\", and triggers the matching child pipeline (ci/child-*.gitlab-ci.yml). secret_detection always runs in the parent.",
       "expected_effect": "Three jobs avoided per docs-only pipeline at the cost of one short classify job. Effect is counted (jobs executed) and measured (duration).",
       "risk": "Low. Misclassification fails toward running everything; the changed-path list is printed in the classify job log; the docs allow-list is unit-tested (src/classify.js). Replaced GitLab `rules:changes`, which judged a merge commit by its first parent and skipped tests on a code change (showcase pipeline 2994150067).",
-      "evidence": [],
-      "state": "applied",
-      "verified_by": "docs"
+      "evidence": [
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994195319",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994239357",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994191951",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258335"
+      ],
+      "state": "verified",
+      "verified_by": "docs",
+      "arm": "optimized",
+      "measured_result": "−23.4% runner-minutes (proxy), 5→4 jobs, class docs, 2/2 runs"
     },
     {
       "id": "OPT-3",
       "change": "workflow:rules so a commit on a branch with an open MR runs one pipeline instead of two.",
       "expected_effect": "Halves pipelines for MR commits. Counted at the project pipeline list; not part of the per-run comparison.",
       "risk": "Low. Standard GitLab pattern.",
-      "evidence": [],
-      "state": "applied",
-      "verified_by": "code"
+      "evidence": [
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994208555",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994212567",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994224815"
+      ],
+      "state": "regressed",
+      "verified_by": "code",
+      "arm": "optimized",
+      "measured_result": "+34.2% runner-minutes (proxy), 5→6 jobs, class code, 3/3 runs"
     },
     {
       "id": "OPT-4",
@@ -39,7 +681,27 @@
       "risk": "Risk of overclaiming. Not applied: no defensible energy input exists for GitLab shared runners.",
       "evidence": [],
       "state": "suggested",
-      "verified_by": "code"
+      "verified_by": "code",
+      "arm": "none",
+      "measured_result": null
+    },
+    {
+      "id": "OPT-5",
+      "arm": "consolidated",
+      "change": "Run lint, test and build in ONE job (ci/consolidated.gitlab-ci.yml) instead of three. Nothing is skipped; no cache; no classify job. One change, isolated.",
+      "expected_effect": "Derived from the measured arms: each job here spends ~12-15 s on provisioning, image pull and checkout against ~2 s of real work, so removing two jobs should cut runner-minutes by roughly a third for every change class.",
+      "risk": "Low. Same commands, same gates, same order. Loses per-job parallelism, which this project does not use, and per-job failure granularity (a failing lint stops the job before tests; the log still shows which step failed).",
+      "evidence": [
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258534",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994263580",
+        "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994268064"
+      ],
+      "state": "verified",
+      "verified_by": "code",
+      "measured_result": "−32.9% runner-minutes (proxy), 5→3 jobs, class code, 3/3 runs"
     }
   ],
   "boundary": "GitLab CI jobs of this project only, including child pipelines (classify, lint, test, build, docs_only_notice, secret_detection, collect_evidence, pages). Excludes developer machines, GitLab control plane, artifact storage, and network transfer.",

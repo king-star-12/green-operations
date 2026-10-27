@@ -36,8 +36,15 @@
   // Class selector + hero
   const comparisons = summary?.comparisons ?? [];
   const sel = $("#class-select");
-  if (comparisons.length === 0) sel.innerHTML = `<option>—</option>`;
-  else sel.innerHTML = comparisons.map((c) => `<option value="${esc(c.change_class)}">${esc(c.change_class)}</option>`).join("");
+  const armSel = $("#arm-select");
+  const arms = [...new Set(comparisons.map((c) => c.arm ?? "optimized"))];
+  armSel.innerHTML = arms.length ? arms.map((a) => `<option value="${esc(a)}">${esc(a)}</option>`).join("") : `<option>—</option>`;
+  const fillClasses = () => {
+    const cls = [...new Set(comparisons.filter((c) => (c.arm ?? "optimized") === armSel.value).map((c) => c.change_class))];
+    sel.innerHTML = cls.length ? cls.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("") : `<option>—</option>`;
+  };
+  fillClasses();
+  armSel.addEventListener("change", () => { fillClasses(); renderHero(); });
   sel.addEventListener("change", renderHero);
   renderHero();
 
@@ -50,8 +57,13 @@
 npm run evidence:all &amp;&amp; npm run site</pre></div>`;
       cap.textContent = ""; return;
     }
-    const c = comparisons.find((x) => x.change_class === sel.value) ?? comparisons[0];
-    if (!c) { hero.innerHTML = `<div class="empty"><h3>No comparison</h3></div>`; return; }
+    const c = comparisons.find((x) => (x.arm ?? "optimized") === armSel.value && x.change_class === sel.value) ?? comparisons[0];
+    const reg = $("#regression-note");
+    if (!c) { hero.innerHTML = `<div class="empty"><h3>No comparison</h3></div>`; reg.hidden = true; return; }
+    const rm = c.metrics?.runner_minutes;
+    const regressed = c.comparable && typeof rm?.reduction_pct === "number" && rm.reduction_pct < 0;
+    reg.hidden = !regressed;
+    if (regressed) reg.innerHTML = `<strong>Regression.</strong> The "${esc(c.arm)}" arm uses ${Math.abs(rm.reduction_pct).toFixed(1)}% more runner-minutes than baseline for ${esc(c.change_class)} changes. The baseline is retained; this arm is not an improvement for this class.`;
     const metricCard = (label, mtr, fmt) => {
       const b = mtr.baseline, o = mtr.optimized;
       const unknown = typeof b !== "number" || typeof o !== "number";
@@ -72,7 +84,7 @@ npm run evidence:all &amp;&amp; npm run site</pre></div>`;
       metricCard("Jobs executed", c.metrics.jobs_executed, (v) => fmtN(v, 0)) +
       metricCard("SCI per successful run", c.metrics.sci_gco2e_per_run, (v) => v);
     const warn = c.comparable ? "" : ` Not compared: ${c.reasons.join("; ")}`;
-    cap.textContent = `${c.baseline.successful} baseline / ${c.optimized.successful} optimized successful runs, class "${c.change_class}", runner ${[...new Set([...c.baseline.runner_classes, ...c.optimized.runner_classes])].join(", ") || "UNKNOWN"}.${warn}`;
+    cap.textContent = `${c.baseline.successful} baseline / ${c.optimized.successful} ${c.arm ?? "optimized"} successful runs, class "${c.change_class}", runner ${[...new Set([...c.baseline.runner_classes, ...c.optimized.runner_classes])].join(", ") || "UNKNOWN"}.${warn}`;
     cap.className = c.comparable ? "small muted" : "note note-yellow small";
   }
 
@@ -83,7 +95,8 @@ npm run evidence:all &amp;&amp; npm run site</pre></div>`;
     const all = [];
     for (const f of (await load("evidence/runs/index.json")) ?? []) { const r = await load(`evidence/runs/${f}`); if (r) all.push(r); }
     const maxDur = Math.max(1, ...all.flatMap((r) => r.jobs.map((j) => j.duration_s || 0)));
-    trace.innerHTML = all.sort((a, b) => (a.arm > b.arm ? 1 : a.arm < b.arm ? -1 : a.id - b.id)).map((r) => `
+    const armOrder = (a) => (a === "baseline" ? "0" : a);
+    trace.innerHTML = all.sort((a, b) => (armOrder(a.arm) > armOrder(b.arm) ? 1 : armOrder(a.arm) < armOrder(b.arm) ? -1 : a.id - b.id)).map((r) => `
       <div class="trace-run">
         <div class="meta"><div class="arm">${esc(r.arm)} · ${esc(r.change_class)}</div>
           <a href="${esc(r.web_url)}">#${esc(r.iid ?? r.id)}</a> <span class="mono">${esc(r.status)}</span>${r.note ? ' <span class="tag tag-unknown">provisional</span>' : ""}<br>
@@ -100,9 +113,10 @@ npm run evidence:all &amp;&amp; npm run site</pre></div>`;
 
   // Ledger
   $("#ledger-body").innerHTML = (summary?.ledger ?? []).map((e) => `<tr>
-    <td class="id">${esc(e.id)}</td><td>${esc(e.change)}</td><td>${esc(e.expected_effect)}</td><td>${esc(e.risk)}</td>
+    <td class="id">${esc(e.id)}</td><td class="mono small">${esc(e.arm ?? "optimized")}</td><td>${esc(e.change)}</td><td>${esc(e.expected_effect)}</td>
+    <td>${e.measured_result ? `<span class="mono small">${esc(e.measured_result)}</span>` : '<span class="muted">not measured</span>'}</td><td>${esc(e.risk)}</td>
     <td>${e.evidence.length ? e.evidence.map((u, i) => `<a class="mono" href="${esc(u)}">run ${i + 1}</a>`).join(", ") : '<span class="muted">none yet</span>'}</td>
-    <td><span class="state state-${esc(e.state)}">${esc(e.state)}</span>${e.state === "suggested" ? '<br><span class="small muted">Suggested by Green Operations; not applied</span>' : ""}</td></tr>`).join("") || `<tr><td colspan="6" class="muted">No ledger entries.</td></tr>`;
+    <td><span class="state state-${esc(e.state)}">${esc(e.state)}</span>${e.state === "suggested" ? '<br><span class="small muted">Suggested by Green Operations; not applied</span>' : ""}</td></tr>`).join("") || `<tr><td colspan="8" class="muted">No ledger entries.</td></tr>`;
 
   // SCI
   const sciBody = $("#sci-body");

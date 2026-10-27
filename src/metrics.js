@@ -57,7 +57,9 @@ export function comparable(baseline, optimized, requiredJobs) {
   if (baseline.change_class !== optimized.change_class) {
     reasons.push(`change class differs: ${baseline.change_class} vs ${optimized.change_class}`);
   }
-  const ranIn = (run) => new Set(run.jobs.filter((j) => j.status === "success").map((j) => j.name));
+  // A job that runs several gates in one (consolidated arm) satisfies each of them.
+  const COVERS = { quality: ["lint", "test", "build"] };
+  const ranIn = (run) => new Set(run.jobs.filter((j) => j.status === "success").flatMap((j) => [j.name, ...(COVERS[j.name] ?? [])]));
   const optRan = ranIn(optimized);
   for (const name of requiredJobs[optimized.change_class] ?? []) {
     if (!optRan.has(name)) reasons.push(`required job "${name}" did not run successfully in optimized pipeline ${optimized.id}`);

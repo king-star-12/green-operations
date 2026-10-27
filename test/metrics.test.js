@@ -79,3 +79,9 @@ test("deploy-only jobs are excluded from runner-minutes and counts", () => {
   assert.equal(runnerMinutes(jobs), 1);
   assert.deepEqual(jobCounts({ jobs }), { executed: 1, skipped: 0, failed: 0, cache_hit: 0, cache_miss: 0 });
 });
+
+test("a consolidated quality job satisfies lint, test and build", () => {
+  const base = run(1, "success", [{ name: "lint", status: "success", duration_s: 1 }, { name: "test", status: "success", duration_s: 1 }, { name: "build", status: "success", duration_s: 1 }, { name: "secret_detection", status: "success", duration_s: 1 }]);
+  const opt = run(2, "success", [{ name: "quality", status: "success", duration_s: 2 }, { name: "secret_detection", status: "success", duration_s: 1 }]);
+  assert.equal(comparable(base, opt, { code: ["lint", "test", "build", "secret_detection"] }).ok, true);
+});

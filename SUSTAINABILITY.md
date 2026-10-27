@@ -1,9 +1,47 @@
 # Sustainability report — Green Operations
 
-> **Status: template with method defined; measurements pending.**
-> Every value below marked `MEASURE`, `COUNT` or `UNKNOWN` must be replaced by
-> a real figure from a linked GitLab pipeline before this report is cited.
-> Do not fill a cell with an estimate and call it a measurement.
+> Section 0 holds the measured results. Sections 1–8 define the method.
+> Tables in section 4 describe what is recorded; the values are in section 0
+> and `evidence/summary.json`.
+
+## 0. Results (measured 2026-10-27, GitLab.com `saas-linux-small-amd64`)
+
+Runner-minutes = sum of job durations, the **proxy** for compute. Duration is **measured** from GitLab timestamps. Medians over the runs shown. Sign: negative = less compute than baseline.
+
+| Arm | Change class | Runs (baseline / arm) | Median pipeline duration | Median runner-min | Change | Jobs |
+|---|---|---|---|---|---|---|
+| consolidated | code | 3 / 3 | 75 s → 50 s | 1.27 → 0.85 | **-32.9%** | 5 → 3 |
+| consolidated | docs | 2 / 1 | 79 s → 48 s | 1.32 → 0.82 | **-38.0%** | 5 → 3 |
+| optimized | docs | 2 / 2 | 79 s → 78 s | 1.32 → 1.01 | **-23.4%** | 5 → 4 |
+| optimized | code | 3 / 3 | 75 s → 120 s | 1.27 → 1.70 | **+34.2%** | 5 → 6 |
+
+**What the evidence says**
+
+- **Winner: consolidate jobs (OPT-5).** −32.9% runner-minutes on code changes and −38.0% on docs changes, with lint, test, build and secret detection all still running. Each job here spends ~12–15 s on provisioning, image pull and checkout against ~2 s of real work, so job *count* is the lever.
+- **Docs-only skip (OPT-2) works:** −23.4% runner-minutes; secret detection still ran on every docs change.
+- **Dependency cache + classify job is a regression on code changes (+34.2%).** The cache does hit (logs show `Successfully extracted cache`), but `npm ci` takes ~1 s here, so it saves almost nothing, while the extra `classify` job adds a full job's overhead. We report this instead of hiding it; the ledger marks OPT-1/OPT-3 as **regressed**.
+- **SCI: not calculated.** Energy per run, grid intensity and embodied emissions are UNKNOWN for GitLab shared runners. No CO₂ figure is claimed. A runner-minute reduction is not presented as a carbon reduction.
+- **Small samples.** 1–3 runs per cell; treat percentages as indicative.
+- **Excluded runs** (kept, with reasons) are in `evidence/excluded/`.
+
+### Run links
+
+- baseline / code: [2994169833](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994169833) — 74 s, 1.27 runner-min
+- baseline / code: [2994185245](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185245) — 75 s, 1.27 runner-min
+- baseline / code: [2994185489](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994185489) — 78 s, 1.3 runner-min
+- baseline / docs: [2994195319](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994195319) — 76 s, 1.27 runner-min
+- baseline / docs: [2994239357](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994239357) — 82 s, 1.37 runner-min
+- consolidated / code: [2994258534](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258534) — 57 s, 0.95 runner-min
+- consolidated / code: [2994263580](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994263580) — 50 s, 0.85 runner-min
+- consolidated / code: [2994268064](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994268064) — 50 s, 0.85 runner-min
+- consolidated / docs: [2994277140](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994277140) — 48 s, 0.82 runner-min
+- optimized / code: [2994208555](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994208555) — 122 s, 1.7 runner-min
+- optimized / code: [2994212567](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994212567) — 118 s, 1.67 runner-min
+- optimized / code: [2994224815](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994224815) — 120 s, 1.7 runner-min
+- optimized / docs: [2994191951](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994191951) — 80 s, 1.03 runner-min
+- optimized / docs: [2994258335](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994258335) — 76 s, 0.98 runner-min
+
+Field Notes page (renders these files): https://showcase-693979.gitlab.io/
 
 ## 1. Boundary
 

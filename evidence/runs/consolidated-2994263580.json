@@ -1,0 +1,81 @@
+{
+  "schema": "green-operations/run/v1",
+  "collected_at": "2026-10-27T12:13:52.337Z",
+  "arm": "consolidated",
+  "change_class": "code",
+  "change_class_basis": "override flag",
+  "project": {
+    "id": 88152707,
+    "path": "gitlab-ai-hackathon/transcend-october-2026/43797788/showcase",
+    "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase"
+  },
+  "id": 2994263580,
+  "iid": 24,
+  "sha": "33e67717e8032d26b8d61baafef31e08b15ce889",
+  "ref": "evidence/consolidated",
+  "source": "api",
+  "status": "success",
+  "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994263580",
+  "before_sha": "0000000000000000000000000000000000000000",
+  "child_pipelines": [],
+  "created_at": "2026-10-27T12:11:07.795Z",
+  "started_at": "2026-10-27T12:11:09.154Z",
+  "finished_at": "2026-10-27T12:12:04.308Z",
+  "duration_s": 50,
+  "queued_s": 1,
+  "runner_class": "saas-linux-small-amd64",
+  "vcpu": "UNKNOWN",
+  "energy_kwh": "UNKNOWN",
+  "jobs": [
+    {
+      "id": 17502636357,
+      "name": "collect_evidence",
+      "stage": "evidence",
+      "status": "success",
+      "duration_s": 19,
+      "queued_s": 0,
+      "started_at": "2026-10-27T12:11:43.980Z",
+      "finished_at": "2026-10-27T12:12:02.830Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "none",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502636357"
+    },
+    {
+      "id": 17502636356,
+      "name": "secret_detection",
+      "stage": "security",
+      "status": "success",
+      "duration_s": 15,
+      "queued_s": 0,
+      "started_at": "2026-10-27T12:11:27.037Z",
+      "finished_at": "2026-10-27T12:11:42.502Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "none",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502636356"
+    },
+    {
+      "id": 17502636355,
+      "name": "quality",
+      "stage": "quality",
+      "status": "success",
+      "duration_s": 17,
+      "queued_s": 0,
+      "started_at": "2026-10-27T12:11:08.900Z",
+      "finished_at": "2026-10-27T12:11:25.461Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "none",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502636355"
+    }
+  ],
+  "labels": {
+    "duration_s": "measured",
+    "queued_s": "measured",
+    "jobs": "counted",
+    "cache": "parsed from job log",
+    "runner_class": "parsed from job log",
+    "energy_kwh": "UNKNOWN"
+  }
+}

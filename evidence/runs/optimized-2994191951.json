@@ -1,0 +1,119 @@
+{
+  "schema": "green-operations/run/v1",
+  "collected_at": "2026-10-27T12:00:59.410Z",
+  "arm": "optimized",
+  "change_class": "docs",
+  "change_class_basis": "classify job: git: pushed range (CI_COMMIT_BEFORE_SHA..CI_COMMIT_SHA) 684c69fa..bf208036",
+  "project": {
+    "id": 88152707,
+    "path": "gitlab-ai-hackathon/transcend-october-2026/43797788/showcase",
+    "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase"
+  },
+  "id": 2994191951,
+  "iid": 11,
+  "sha": "bf208036b49fe873979a04693af88a3d9f8fe47c",
+  "ref": "main",
+  "source": "push",
+  "status": "success",
+  "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994191951",
+  "before_sha": "684c69fa9474fbf55b64d2a1e45b617fcee20edd",
+  "child_pipelines": [
+    {
+      "id": 2994193439,
+      "bridge": "app",
+      "status": "success",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/pipelines/2994193439",
+      "jobs": 1
+    }
+  ],
+  "created_at": "2026-10-27T11:57:50.599Z",
+  "started_at": "2026-10-27T11:57:51.340Z",
+  "finished_at": "2026-10-27T11:59:21.627Z",
+  "duration_s": 80,
+  "queued_s": null,
+  "runner_class": "saas-linux-small-amd64",
+  "vcpu": "UNKNOWN",
+  "energy_kwh": "UNKNOWN",
+  "jobs": [
+    {
+      "id": 17502185262,
+      "name": "pages",
+      "stage": "deploy",
+      "status": "success",
+      "duration_s": 19,
+      "queued_s": 0,
+      "started_at": "2026-10-27T11:58:59.997Z",
+      "finished_at": "2026-10-27T11:59:19.346Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "miss",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502185262"
+    },
+    {
+      "id": 17502185261,
+      "name": "collect_evidence",
+      "stage": "evidence",
+      "status": "success",
+      "duration_s": 23,
+      "queued_s": 0,
+      "started_at": "2026-10-27T11:58:35.734Z",
+      "finished_at": "2026-10-27T11:58:58.357Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "miss",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502185261"
+    },
+    {
+      "id": 17502185260,
+      "name": "secret_detection",
+      "stage": "security",
+      "status": "success",
+      "duration_s": 15,
+      "queued_s": 0,
+      "started_at": "2026-10-27T11:58:19.712Z",
+      "finished_at": "2026-10-27T11:58:34.227Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "none",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502185260"
+    },
+    {
+      "id": 17502185258,
+      "name": "classify",
+      "stage": "classify",
+      "status": "success",
+      "duration_s": 15,
+      "queued_s": 0,
+      "started_at": "2026-10-27T11:57:51.188Z",
+      "finished_at": "2026-10-27T11:58:05.803Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "none",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502185258"
+    },
+    {
+      "id": 17502193388,
+      "name": "docs_only_notice",
+      "stage": "notice",
+      "status": "success",
+      "duration_s": 9,
+      "queued_s": 0,
+      "started_at": "2026-10-27T11:58:08.654Z",
+      "finished_at": "2026-10-27T11:58:17.748Z",
+      "runner": "k8s.saas-linux-small-amd64.runners-manager.gitlab.com/default ",
+      "runner_class": "saas-linux-small-amd64",
+      "cache": "none",
+      "web_url": "https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase/-/jobs/17502193388",
+      "child_pipeline_id": 2994193439,
+      "bridge": "app"
+    }
+  ],
+  "labels": {
+    "duration_s": "measured",
+    "queued_s": "measured",
+    "jobs": "counted",
+    "cache": "parsed from job log",
+    "runner_class": "parsed from job log",
+    "energy_kwh": "UNKNOWN"
+  }
+}

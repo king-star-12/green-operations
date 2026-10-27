@@ -25,16 +25,18 @@ const runs = files.map((f) => JSON.parse(readFileSync(join(runsDir, f), "utf8"))
 
 const byArm = (arm) => runs.filter((r) => r.arm === arm);
 const baseline = byArm("baseline");
-const optimized = byArm("optimized");
-
-const classes = [...new Set(runs.map((r) => r.change_class))];
+const arms = [...new Set(runs.map((r) => r.arm).filter((a) => a && a !== "baseline"))].sort();
+const classes = [...new Set(runs.map((r) => r.change_class))].sort();
 const comparisons = [];
 
-for (const cls of classes) {
+const totals = (rs) => rs.map((r) => jobCounts(r)).reduce((a, c) => ({ hit: a.hit + c.cache_hit, miss: a.miss + c.cache_miss }), { hit: 0, miss: 0 });
+
+for (const arm of arms) for (const cls of classes) {
   const b = baseline.filter((r) => r.change_class === cls && r.status === "success");
-  const o = optimized.filter((r) => r.change_class === cls && r.status === "success");
+  const o = byArm(arm).filter((r) => r.change_class === cls && r.status === "success");
   if (b.length === 0 || o.length === 0) {
-    comparisons.push({ change_class: cls, comparable: false, reasons: [`need at least one successful baseline and one successful optimized run (have ${b.length}/${o.length})`], baseline: summarise(b), optimized: summarise(o) });
+    if (o.length === 0) continue; // this arm has no runs of this class; nothing to say
+    comparisons.push({ arm, change_class: cls, comparable: false, reasons: [`need at least one successful baseline and one successful ${arm} run (have ${b.length}/${o.length})`], baseline: summarise(b), optimized: summarise(o) });
     continue;
   }
   const reasons = [];
@@ -46,6 +48,7 @@ for (const cls of classes) {
   const so = summarise(o);
   const metric = (bv, ov, kind, unit) => ({ baseline: bv, optimized: ov, reduction_pct: reductionPercent(bv, ov), kind, unit });
   comparisons.push({
+    arm,
     change_class: cls,
     comparable: reasons.length === 0,
     reasons: [...new Set(reasons)],
@@ -59,27 +62,27 @@ for (const cls of classes) {
       energy_kwh: { baseline: "UNKNOWN", optimized: "UNKNOWN", reduction_pct: null, kind: "UNKNOWN", unit: "kWh" },
       sci_gco2e_per_run: { baseline: "UNKNOWN", optimized: "UNKNOWN", reduction_pct: null, kind: "UNKNOWN", unit: "gCO2e/run" }
     },
-    cache: {
-      baseline: b.map((r) => jobCounts(r)).reduce((a, c) => ({ hit: a.hit + c.cache_hit, miss: a.miss + c.cache_miss }), { hit: 0, miss: 0 }),
-      optimized: o.map((r) => jobCounts(r)).reduce((a, c) => ({ hit: a.hit + c.cache_hit, miss: a.miss + c.cache_miss }), { hit: 0, miss: 0 })
-    }
+    cache: { baseline: totals(b), optimized: totals(o) }
   });
 }
 
 // Update the ledger's state from evidence.
 let ledger = existsSync(ledgerPath) ? JSON.parse(readFileSync(ledgerPath, "utf8")) : [];
-const primary = comparisons.find((c) => c.change_class === "code") ?? comparisons[0];
-const docsComparison = comparisons.find((c) => c.change_class === "docs");
 ledger = ledger.map((e) => {
-  const cmp = e.verified_by === "docs" ? docsComparison : primary;
+  const arm = e.arm ?? "optimized";
+  const cmp = comparisons.find((c) => c.arm === arm && c.change_class === (e.verified_by ?? "code"));
   const state = e.state === "suggested" ? "suggested" : stateFromComparison(e, cmp);
-  return { ...e, state, evidence: [...new Set([...(e.evidence ?? []), ...(cmp?.baseline?.run_urls ?? []), ...(cmp?.optimized?.run_urls ?? [])])] };
+  const result = cmp?.comparable && cmp.metrics?.runner_minutes?.reduction_pct !== null && cmp.metrics?.runner_minutes?.reduction_pct !== undefined
+    ? `${cmp.metrics.runner_minutes.reduction_pct >= 0 ? "−" : "+"}${Math.abs(cmp.metrics.runner_minutes.reduction_pct).toFixed(1)}% runner-minutes (proxy), ${cmp.metrics.jobs_executed.baseline}→${cmp.metrics.jobs_executed.optimized} jobs, class ${cmp.change_class}, ${cmp.baseline.successful}/${cmp.optimized.successful} runs`
+    : null;
+  return { ...e, arm, state, measured_result: result, evidence: [...new Set([...(cmp?.baseline?.run_urls ?? []), ...(cmp?.optimized?.run_urls ?? [])])] };
 });
 
 const summary = {
   schema: "green-operations/summary/v1",
   generated_at: new Date().toISOString(),
-  state: runs.length === 0 ? "before_baseline" : baseline.length && !optimized.length ? "baseline_captured" : comparisons.some((c) => c.comparable) ? "verified" : "insufficient_data",
+  state: runs.length === 0 ? "before_baseline" : baseline.length && arms.length === 0 ? "baseline_captured" : comparisons.some((c) => c.comparable) ? "verified" : "insufficient_data",
+  arms,
   runs: runs.map((r) => ({ arm: r.arm, id: r.id, change_class: r.change_class, status: r.status, duration_s: r.duration_s, runner_minutes: Number(runnerMinutes(r.jobs).toFixed(2)), jobs: jobCounts(r), web_url: r.web_url, runner_class: r.runner_class, ref: r.ref, finished_at: r.finished_at, provisional: Boolean(r.note) })),
   comparisons,
   ledger,
@@ -94,9 +97,9 @@ const summary = {
 
 writeFileSync(join(process.cwd(), "evidence", "summary.json"), JSON.stringify(summary, null, 2) + "\n");
 writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n");
-console.log(`summary state: ${summary.state}; runs=${runs.length} baseline=${baseline.length} optimized=${optimized.length}`);
+console.log(`summary state: ${summary.state}; runs=${runs.length} baseline=${baseline.length} arms=${arms.join(",")}`);
 for (const c of comparisons) {
   const rm = c.metrics?.runner_minutes;
-  console.log(`  [${c.change_class}] comparable=${c.comparable}` + (rm && rm.reduction_pct !== null ? ` runner-minute proxy change ${rm.reduction_pct.toFixed(1)}%` : ""));
+  console.log(`  [${c.arm} / ${c.change_class}] comparable=${c.comparable}` + (rm && rm.reduction_pct !== null ? ` runner-minute proxy change ${rm.reduction_pct.toFixed(1)}% (${rm.baseline?.toFixed(2)} → ${rm.optimized?.toFixed(2)})` : ""));
   for (const r of c.reasons) console.log(`    - ${r}`);
 }

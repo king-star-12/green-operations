@@ -41,7 +41,9 @@
 <section id="overview" class="evidence-panel" aria-labelledby="overview-h">
   <h1 id="overview-h">Baseline <span class="arrow" aria-hidden="true">→</span> Optimized</h1>
   <p class="functional-unit">Functional unit: <em>one successful, equivalent CI pipeline run that validates the same change</em>.
+    Arm: <select id="arm-select" aria-label="Optimization arm"></select>
     Change class: <select id="class-select" aria-label="Change class"></select></p>
+  <p class="note note-red small" id="regression-note" hidden></p>
   <div id="hero" class="hero">
     <!-- rendered by app.js -->
   </div>
@@ -57,7 +59,7 @@
 <section id="optimizations" aria-labelledby="ledger-h">
   <h2 id="ledger-h">Optimization ledger</h2>
   <table class="ledger">
-    <thead><tr><th>ID</th><th>Change</th><th>Expected effect</th><th>Risk</th><th>Evidence</th><th>State</th></tr></thead>
+    <thead><tr><th>ID</th><th>Arm</th><th>Change</th><th>Expected effect</th><th>Measured result</th><th>Risk</th><th>Evidence</th><th>State</th></tr></thead>
     <tbody id="ledger-body"></tbody>
   </table>
 </section>
