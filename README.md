@@ -28,6 +28,10 @@ Intensity (SCI) score are missing, the page says so.
 | `SUSTAINABILITY.md` | Boundary, functional unit, method, assumptions, limitations. |
 | `docs/` | Demo script, submission draft, agent setup. |
 
+## Evidence project
+
+Live hackathon project: https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43797788/showcase (pipelines are public).
+
 ## Quick start
 
 ```bash
