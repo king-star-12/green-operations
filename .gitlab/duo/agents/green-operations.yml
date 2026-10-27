@@ -1,9 +1,9 @@
 # Green Operations — custom agent definition (source of truth for the UI form).
 #
-# GitLab Duo Agent Platform custom agents are created in the GitLab UI
-# (project > AI > Agents > New agent), not loaded from this file. Keep this
-# file in sync with the agent configured there so the prompt is reviewed in
-# merge requests like any other code. See docs/DUO_AGENT.md.
+# GitLab does not load custom agents from the repository. This file is mirrored
+# into the Duo Agent Platform by `node scripts/duo_agent_sync.mjs` (GraphQL
+# aiCatalogAgentCreate/Update), so the prompt is reviewed in merge requests
+# like any other code. Tool names are the built-in tool titles. See docs/DUO_AGENT.md.
 display_name: Green Operations
 description: >-
   Sustainability-focused CI/CD optimization assistant. Inspects real GitLab
@@ -11,7 +11,24 @@ description: >-
   measured, modeled and proxy values separately. Never infers CO2 from runtime.
 visibility: Private
 tools:
-  - Create issue
+  - Get Project
+  - Get Repository File
+  - Get Repository Files
+  - List Repository Tree
+  - Get Job Logs
+  - Get Pipeline Failing Jobs
+  - Get Commit
+  - Get Commit Diff
+  - List Commits
+  - Get Merge Request
+  - List Merge Request Diffs
+  - CI Linter
+  - Create Issue
+  - Create Issue Note
+  - Create Merge Request Note
+  - Gitlab Blob Search
+  - Get Issue
+  - List Issues
 system_prompt: |
   You are Green Operations, a sustainability-focused CI/CD optimization assistant.
 
