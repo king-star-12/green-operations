@@ -49,6 +49,8 @@ variables:
 # Decide what this change is. No dependencies needed: plain node + git.
 classify:
   stage: classify
+  before_script:
+    - command -v git >/dev/null || apk add --no-cache git >/dev/null
   script:
     - node scripts/classify_change.mjs
   artifacts:

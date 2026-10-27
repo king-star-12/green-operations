@@ -38,17 +38,38 @@ function changedPaths() {
   } else {
     return { paths: null, how: "first push to branch; no base to compare" };
   }
+  const range = `${how} ${base.slice(0, 8)}..${sha.slice(0, 8)}`;
   try {
     // Make sure the base object is present in a shallow clone.
     try { git("cat-file", "-e", `${base}^{commit}`); } catch { git("fetch", "--quiet", "--depth=200", "origin", base); }
     const out = git("diff", "--name-only", base, sha);
-    return { paths: out ? out.split("\n") : [], how: `${how} ${base.slice(0, 8)}..${sha.slice(0, 8)}` };
+    return { paths: out ? out.split("\n") : [], how: `git: ${range}` };
   } catch (err) {
-    return { paths: null, how: `git diff failed: ${err.message.split("\n")[0]}` };
+    return { paths: null, how: `git diff failed: ${err.message.split("\n")[0]}`, base, sha, range };
   }
 }
 
-const { paths, how } = changedPaths();
+// Second source: GitLab's compare API over the same range, using the job token.
+async function changedPathsViaApi(base, sha, range) {
+  const api = env.CI_API_V4_URL;
+  const token = env.CI_JOB_TOKEN;
+  if (!api || !token || !env.CI_PROJECT_ID) return { paths: null, how: "no API access" };
+  try {
+    const res = await fetch(`${api}/projects/${env.CI_PROJECT_ID}/repository/compare?from=${base}&to=${sha}&straight=true`, { headers: { "JOB-TOKEN": token } });
+    if (!res.ok) return { paths: null, how: `compare API ${res.status}` };
+    const cmp = await res.json();
+    return { paths: [...new Set(cmp.diffs.flatMap((d) => [d.old_path, d.new_path]).filter(Boolean))], how: `compare API: ${range}` };
+  } catch (err) {
+    return { paths: null, how: `compare API failed: ${err.message}` };
+  }
+}
+
+let { paths, how, base, sha: headSha, range } = changedPaths();
+if (!Array.isArray(paths) && base) {
+  const viaApi = await changedPathsViaApi(base, headSha, range);
+  how = `${how}; ${viaApi.how}`;
+  paths = viaApi.paths;
+}
 const result = classifyChange(paths);
 const child = result.change_class === "docs" ? "ci/child-docs-only.gitlab-ci.yml" : "ci/child-app-jobs.gitlab-ci.yml";
 
