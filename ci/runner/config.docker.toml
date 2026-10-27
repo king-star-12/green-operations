@@ -1,0 +1,33 @@
+# gitlab-runner config for a self-hosted Docker executor used ONLY to collect
+# evidence when GitLab.com shared runners are unavailable (for example before
+# identity verification). Both baseline and optimized arms must run on the
+# same runner so the boundary is consistent. Fill RUNNER_TOKEN from
+# `POST /user/runners` (or Settings > CI/CD > Runners > New project runner).
+concurrent = 1
+check_interval = 3
+
+[[runners]]
+  name = "green-ops-evidence-runner-docker"
+  url = "https://gitlab.com"
+  token = "__RUNNER_TOKEN__"
+  executor = "docker"
+  # Pass the session's egress proxy and CA bundle into every job container.
+  environment = [
+    "HTTPS_PROXY=__HTTPS_PROXY__",
+    "https_proxy=__HTTPS_PROXY__",
+    "NO_PROXY=__NO_PROXY__",
+    "SSL_CERT_FILE=/etc/ccr/ca-bundle.crt",
+    "NODE_EXTRA_CA_CERTS=/etc/ccr/ca-bundle.crt",
+    "GIT_SSL_CAINFO=/etc/ccr/ca-bundle.crt",
+    "npm_config_cafile=/etc/ccr/ca-bundle.crt",
+    "REQUESTS_CA_BUNDLE=/etc/ccr/ca-bundle.crt"
+  ]
+  [runners.docker]
+    image = "node:22-alpine"
+    privileged = false
+    pull_policy = ["if-not-present"]
+    network_mode = "host"
+    volumes = ["/cache", "/root/.ccr/ca-bundle.crt:/etc/ccr/ca-bundle.crt:ro"]
+    shm_size = 0
+  [runners.cache]
+    Type = ""
