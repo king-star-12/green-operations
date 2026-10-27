@@ -1,0 +1,43 @@
+# Child pipeline for CODE changes: every quality gate runs.
+# Triggered by the `classify` job in .gitlab-ci.yml.
+stages: [lint, test, build]
+
+default:
+  image: node:22-alpine
+  interruptible: true
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+.node:
+  before_script:
+    - node --version
+    - npm ci --no-audit --no-fund --prefer-offline
+  cache: &npm_cache
+    key:
+      files: [package-lock.json]
+      prefix: npm
+    fallback_keys: [npm-default]
+    paths: [.npm/]
+    policy: pull
+
+lint:
+  stage: lint
+  extends: .node
+  script: npm run lint
+  cache:
+    <<: *npm_cache
+    policy: pull-push   # first job warms the cache for the rest
+
+test:
+  stage: test
+  extends: .node
+  script: npm test
+
+build:
+  stage: build
+  extends: .node
+  script: npm run build
+  artifacts:
+    paths: [dist/]
+    expire_in: 1 day

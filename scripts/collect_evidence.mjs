@@ -18,6 +18,7 @@
  */
 import { mkdirSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { classifyChange } from "../src/classify.js";
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a, i, arr) => (a.startsWith("--") ? [a.slice(2), arr[i + 1] ?? "true"] : null)).filter(Boolean)
@@ -46,18 +47,28 @@ async function get(path, { text = false } = {}) {
   return text ? res.text() : res.json();
 }
 
-const DOCS_ONLY = [/\.md$/i, /^docs\//, /^LICENSE$/, /^\.gitlab\/issue_templates\//];
+const ZERO = "0000000000000000000000000000000000000000";
 
-async function detectChangeClass(sha) {
-  if (args.class) return args.class;
+/**
+ * Classify from the whole pushed range (before_sha..sha) when GitLab recorded
+ * one, so merge commits are judged on everything they bring in. Falls back to
+ * the single commit diff, and fails safe to "code".
+ */
+async function detectChangeClass(pipeline) {
+  if (args.class && args.class !== "" && args.class !== "UNKNOWN") return args.class;
   try {
-    const diff = await get(`/projects/${project}/repository/commits/${sha}/diff`);
-    const paths = diff.flatMap((d) => [d.old_path, d.new_path]).filter(Boolean);
-    if (paths.length === 0) return "UNKNOWN";
-    return paths.every((p) => DOCS_ONLY.some((re) => re.test(p))) ? "docs" : "code";
+    let paths;
+    if (pipeline.before_sha && pipeline.before_sha !== ZERO) {
+      const cmp = await get(`/projects/${project}/repository/compare?from=${pipeline.before_sha}&to=${pipeline.sha}&straight=true`);
+      paths = cmp.diffs.flatMap((d) => [d.old_path, d.new_path]).filter(Boolean);
+    } else {
+      const diff = await get(`/projects/${project}/repository/commits/${pipeline.sha}/diff`);
+      paths = diff.flatMap((d) => [d.old_path, d.new_path]).filter(Boolean);
+    }
+    return classifyChange(paths).change_class;
   } catch (err) {
     console.warn(`could not detect change class: ${err.message}`);
-    return "UNKNOWN";
+    return classifyChange(null).change_class;
   }
 }
 
@@ -77,6 +88,17 @@ function seconds(a, b) {
 
 const pipeline = await get(`/projects/${project}/pipelines/${pipelineId}`);
 const jobsRaw = await get(`/projects/${project}/pipelines/${pipelineId}/jobs?per_page=100&include_retried=false`);
+// Child pipelines (parent-child via `trigger`): include their jobs so the
+// trace and runner-minutes cover everything this pipeline actually ran.
+const bridges = await get(`/projects/${project}/pipelines/${pipelineId}/bridges?per_page=100`).catch(() => []);
+const childPipelines = [];
+for (const b of bridges) {
+  const dp = b.downstream_pipeline;
+  if (!dp?.id) continue;
+  const childJobs = await get(`/projects/${project}/pipelines/${dp.id}/jobs?per_page=100&include_retried=false`);
+  childPipelines.push({ id: dp.id, bridge: b.name, status: dp.status, web_url: dp.web_url, jobs: childJobs.length });
+  for (const j of childJobs) jobsRaw.push({ ...j, child_pipeline_id: dp.id, bridge: b.name });
+}
 const projectInfo = await get(`/projects/${project}`);
 
 const jobs = [];
@@ -90,7 +112,7 @@ for (const j of jobsRaw) {
     }
   }
   const runnerDesc = j.runner?.description ?? "UNKNOWN";
-  const sizeMatch = trace.match(/Running on runner-[\w-]+ via [\w.-]+|(saas-linux-\w+-\w+)/);
+  const sizeMatch = `${runnerDesc}\n${trace}`.match(/(saas-linux-\w+-\w+)/);
   jobs.push({
     id: j.id,
     name: j.name,
@@ -103,12 +125,13 @@ for (const j of jobsRaw) {
     runner: runnerDesc,
     runner_class: sizeMatch?.[1] ?? j.runner?.description ?? "UNKNOWN",
     cache: j.status === "success" || j.status === "failed" ? cacheOutcome(trace) : "UNKNOWN",
-    web_url: j.web_url
+    web_url: j.web_url,
+    ...(j.child_pipeline_id ? { child_pipeline_id: j.child_pipeline_id, bridge: j.bridge } : {})
   });
 }
 
 const sha = pipeline.sha;
-const changeClass = await detectChangeClass(sha);
+const changeClass = await detectChangeClass(pipeline);
 const runnerClasses = [...new Set(jobs.map((j) => j.runner_class).filter((c) => c && c !== "UNKNOWN"))];
 
 const record = {
@@ -124,6 +147,8 @@ const record = {
   source: pipeline.source,
   status: pipeline.status,
   web_url: pipeline.web_url,
+  before_sha: pipeline.before_sha ?? null,
+  child_pipelines: childPipelines,
   created_at: pipeline.created_at,
   started_at: pipeline.started_at,
   finished_at: pipeline.finished_at,

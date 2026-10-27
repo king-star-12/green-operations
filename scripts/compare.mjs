@@ -83,7 +83,7 @@ const summary = {
   runs: runs.map((r) => ({ arm: r.arm, id: r.id, change_class: r.change_class, status: r.status, duration_s: r.duration_s, runner_minutes: Number(runnerMinutes(r.jobs).toFixed(2)), jobs: jobCounts(r), web_url: r.web_url, runner_class: r.runner_class, ref: r.ref, finished_at: r.finished_at, provisional: Boolean(r.note) })),
   comparisons,
   ledger,
-  boundary: "GitLab CI jobs of this project only (lint, test, build, secret_detection, collect_evidence). Excludes developer machines, GitLab control plane, artifact storage, and network transfer.",
+  boundary: "GitLab CI jobs of this project only, including child pipelines (classify, lint, test, build, docs_only_notice, secret_detection, collect_evidence, pages). Excludes developer machines, GitLab control plane, artifact storage, and network transfer.",
   limitations: [
     "Runner-minutes are a compute-time proxy, not an energy or carbon measurement.",
     "GitLab shared runners expose no energy telemetry; energy per run is UNKNOWN.",

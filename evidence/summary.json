@@ -1,6 +1,6 @@
 {
   "schema": "green-operations/summary/v1",
-  "generated_at": "2026-10-27T10:36:06.874Z",
+  "generated_at": "2026-10-27T11:53:08.746Z",
   "state": "before_baseline",
   "runs": [],
   "comparisons": [],
@@ -16,9 +16,9 @@
     },
     {
       "id": "OPT-2",
-      "change": "Skip lint/test/build for documentation-only changes (*.md, docs/, LICENSE) using rules:changes. secret_detection always runs.",
-      "expected_effect": "Three jobs avoided per docs-only pipeline. Effect is counted (jobs executed) and measured (duration).",
-      "risk": "Low-medium. Misclassifying a code file as docs would skip tests; the path list is narrow and reviewed in the MR. Code changes run every job.",
+      "change": "Documentation-only changes skip lint/test/build. An explicit `classify` job diffs the whole pushed range with git, fails safe to \"code\", and triggers the matching child pipeline (ci/child-*.gitlab-ci.yml). secret_detection always runs in the parent.",
+      "expected_effect": "Three jobs avoided per docs-only pipeline at the cost of one short classify job. Effect is counted (jobs executed) and measured (duration).",
+      "risk": "Low. Misclassification fails toward running everything; the changed-path list is printed in the classify job log; the docs allow-list is unit-tested (src/classify.js). Replaced GitLab `rules:changes`, which judged a merge commit by its first parent and skipped tests on a code change (showcase pipeline 2994150067).",
       "evidence": [],
       "state": "applied",
       "verified_by": "docs"
@@ -42,7 +42,7 @@
       "verified_by": "code"
     }
   ],
-  "boundary": "GitLab CI jobs of this project only (lint, test, build, secret_detection, collect_evidence). Excludes developer machines, GitLab control plane, artifact storage, and network transfer.",
+  "boundary": "GitLab CI jobs of this project only, including child pipelines (classify, lint, test, build, docs_only_notice, secret_detection, collect_evidence, pages). Excludes developer machines, GitLab control plane, artifact storage, and network transfer.",
   "limitations": [
     "Runner-minutes are a compute-time proxy, not an energy or carbon measurement.",
     "GitLab shared runners expose no energy telemetry; energy per run is UNKNOWN.",

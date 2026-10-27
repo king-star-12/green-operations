@@ -1,0 +1,12 @@
+# Child pipeline for DOCUMENTATION-ONLY changes.
+# lint, test and build are deliberately not run: the classify job proved that
+# every changed path is documentation. secret_detection still runs in the
+# parent pipeline for every change.
+stages: [notice]
+
+docs_only_notice:
+  stage: notice
+  image: alpine:3.20
+  script:
+    - echo "Documentation-only change. Jobs avoided - lint, test, build."
+    - echo "Secret detection ran in the parent pipeline. See the classify job log for the changed paths."

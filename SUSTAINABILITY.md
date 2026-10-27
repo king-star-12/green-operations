@@ -11,9 +11,11 @@ GitLab CI jobs of this project only:
 
 | Job | Stage | Runs on |
 |---|---|---|
+| `classify` | classify | every change (optimized arm only; ~10 s, counted in the optimized figures) |
 | `lint` | lint | every code change |
 | `test` | test | every code change |
 | `build` | build | every code change |
+| `docs_only_notice` | notice | docs-only changes (optimized arm only; replaces lint/test/build) |
 | `secret_detection` | security | **every change, always** |
 | `collect_evidence` | evidence | every change |
 

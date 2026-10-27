@@ -1,19 +1,18 @@
 # ---------------------------------------------------------------------------
 # Green Operations — OPTIMIZED pipeline
 #
-# Two isolated, measurable optimizations compared with ci/baseline.gitlab-ci.yml:
+# Compared with ci/baseline.gitlab-ci.yml, three isolated changes:
 #
-#   1. Dependency cache keyed on package-lock.json with a fallback key, so
-#      npm ci reuses downloaded packages across jobs and pipelines.
-#   2. rules:changes so lint/test/build are skipped for documentation-only
-#      changes. Secret detection ALWAYS runs. For any change touching code,
-#      configuration or dependencies, every required job still runs.
-#
-# Also: workflow:rules prevents duplicate branch + merge-request pipelines.
+#   OPT-1  npm dependency cache keyed on package-lock.json with a fallback key
+#          (in ci/child-app-jobs.gitlab-ci.yml).
+#   OPT-2  Documentation-only changes skip lint/test/build. The decision is
+#          made by an explicit `classify` job that diffs the whole pushed range
+#          with git and fails safe to "code". Secret detection ALWAYS runs.
+#   OPT-3  workflow:rules prevents duplicate branch + merge-request pipelines.
 #
 # Nothing here weakens quality or security coverage for code changes.
 # ---------------------------------------------------------------------------
-stages: [lint, test, build, security, evidence, deploy]
+stages: [classify, app, security, evidence, deploy]
 
 default:
   image: node:22-alpine
@@ -22,7 +21,6 @@ default:
 include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
 
-# Avoid running both a branch pipeline and an MR pipeline for the same commit.
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -34,13 +32,7 @@ workflow:
 variables:
   GREEN_OPS_ARM: "optimized"
   npm_config_cache: "$CI_PROJECT_DIR/.npm"
-
-# Paths that never affect lint/test/build results. Keep this list narrow.
-.docs_paths: &docs_paths
-  - "**/*.md"
-  - "docs/**/*"
-  - "LICENSE"
-  - ".gitlab/issue_templates/**/*"
+  GIT_DEPTH: "50"
 
 .node:
   before_script:
@@ -54,47 +46,26 @@ variables:
     paths: [.npm/]
     policy: pull
 
-# Run lint/test/build for everything EXCEPT docs-only changes.
-.code_rules: &code_rules
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    changes:
-      paths: *docs_paths
-      compare_to: $CI_MERGE_REQUEST_DIFF_BASE_SHA
-    when: never
-  - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA != "0000000000000000000000000000000000000000"
-    changes:
-      paths: *docs_paths
-    when: never
-  - when: on_success
-
-lint:
-  stage: lint
-  extends: .node
-  rules: *code_rules
-  script: npm run lint
-  # First job in the pipeline warms the cache for the rest.
-  cache:
-    key:
-      files: [package-lock.json]
-      prefix: npm
-    fallback_keys: [npm-default]
-    paths: [.npm/]
-    policy: pull-push
-
-test:
-  stage: test
-  extends: .node
-  rules: *code_rules
-  script: npm test
-
-build:
-  stage: build
-  extends: .node
-  rules: *code_rules
-  script: npm run build
+# Decide what this change is. No dependencies needed: plain node + git.
+classify:
+  stage: classify
+  script:
+    - node scripts/classify_change.mjs
   artifacts:
-    paths: [dist/]
-    expire_in: 1 day
+    paths: [generated/]
+    reports:
+      dotenv: generated/classify.env
+    expire_in: 30 days
+
+# Run the selected child pipeline and wait for it.
+app:
+  stage: app
+  needs: [classify]
+  trigger:
+    include:
+      - artifact: generated/child.yml
+        job: classify
+    strategy: depend
 
 # Security gate: always runs, regardless of which files changed.
 secret_detection:
@@ -107,13 +78,12 @@ collect_evidence:
   extends: .node
   when: always
   script:
-    - node scripts/collect_evidence.mjs --arm "$GREEN_OPS_ARM"
+    - node scripts/collect_evidence.mjs --arm "$GREEN_OPS_ARM" --class "$CHANGE_CLASS"
   artifacts:
     paths: [evidence/runs/]
     expire_in: 30 days
 
-# Publishes the Field Notes evidence page. Only reads committed evidence
-# files; it never fabricates data.
+# Publishes the Field Notes evidence page from committed evidence only.
 pages:
   stage: deploy
   extends: .node
