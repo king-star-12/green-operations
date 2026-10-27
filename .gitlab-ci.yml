@@ -89,6 +89,9 @@ collect_evidence:
 pages:
   stage: deploy
   extends: .node
+  # Only committed, finalised evidence: do not pull this pipeline's own
+  # provisional collect_evidence artifact into the page.
+  dependencies: []
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
