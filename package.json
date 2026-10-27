@@ -1,0 +1,24 @@
+{
+  "name": "green-operations",
+  "version": "0.1.0",
+  "description": "Smarter pipelines. Lower compute waste. Measurable environmental impact.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "lint": "eslint src test scripts/*.mjs",
+    "test": "node --test \"test/**/*.test.js\"",
+    "build": "node scripts/build.mjs",
+    "evidence:collect": "node scripts/collect_evidence.mjs",
+    "evidence:compare": "node scripts/compare.mjs",
+    "evidence:sci": "node scripts/sci.mjs",
+    "evidence:all": "npm run evidence:compare && npm run evidence:sci",
+    "site": "node scripts/build_site.mjs"
+  },
+  "devDependencies": {
+    "eslint": "^9.14.0",
+    "@eslint/js": "^9.14.0",
+    "globals": "^15.12.0"
+  }
+}

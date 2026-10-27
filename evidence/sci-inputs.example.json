@@ -1,0 +1,17 @@
+{
+  "_comment": "Copy to evidence/sci-inputs.json ONLY when you have defensible values. Every field left out is reported as UNKNOWN and SCI is not calculated.",
+  "baseline": {
+    "energy_kwh": null,
+    "grid_intensity_gco2e_per_kwh": null,
+    "embodied_gco2e": null,
+    "kinds": { "energy_kwh": "modeled", "grid_intensity_gco2e_per_kwh": "measured", "embodied_gco2e": "modeled" },
+    "sources": { "energy_kwh": "<model name + parameters>", "grid_intensity_gco2e_per_kwh": "<grid data source + period + region>", "embodied_gco2e": "<vendor datasheet + allocation method>" }
+  },
+  "optimized": {
+    "energy_kwh": null,
+    "grid_intensity_gco2e_per_kwh": null,
+    "embodied_gco2e": null,
+    "kinds": { "energy_kwh": "modeled", "grid_intensity_gco2e_per_kwh": "measured", "embodied_gco2e": "modeled" },
+    "sources": {}
+  }
+}

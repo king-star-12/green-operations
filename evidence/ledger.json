@@ -1,0 +1,38 @@
+[
+  {
+    "id": "OPT-1",
+    "change": "Cache npm dependencies keyed on package-lock.json with an `npm-default` fallback key; `lint` pushes the cache, other jobs pull it.",
+    "expected_effect": "Fewer repeated package downloads per job; shorter `npm ci` phase. Effect is measured as runner-minutes (proxy) and pipeline duration (measured).",
+    "risk": "Low. A stale cache cannot change what is installed because npm ci still verifies against the lockfile; a cache miss only falls back to a full download.",
+    "evidence": [],
+    "state": "applied",
+    "verified_by": "code"
+  },
+  {
+    "id": "OPT-2",
+    "change": "Skip lint/test/build for documentation-only changes (*.md, docs/, LICENSE) using rules:changes. secret_detection always runs.",
+    "expected_effect": "Three jobs avoided per docs-only pipeline. Effect is counted (jobs executed) and measured (duration).",
+    "risk": "Low-medium. Misclassifying a code file as docs would skip tests; the path list is narrow and reviewed in the MR. Code changes run every job.",
+    "evidence": [],
+    "state": "applied",
+    "verified_by": "docs"
+  },
+  {
+    "id": "OPT-3",
+    "change": "workflow:rules so a commit on a branch with an open MR runs one pipeline instead of two.",
+    "expected_effect": "Halves pipelines for MR commits. Counted at the project pipeline list; not part of the per-run comparison.",
+    "risk": "Low. Standard GitLab pattern.",
+    "evidence": [],
+    "state": "applied",
+    "verified_by": "code"
+  },
+  {
+    "id": "OPT-4",
+    "change": "Measure energy per run and calculate SCI.",
+    "expected_effect": "UNKNOWN until runner energy telemetry or a validated model with a documented boundary is available.",
+    "risk": "Risk of overclaiming. Not applied: no defensible energy input exists for GitLab shared runners.",
+    "evidence": [],
+    "state": "suggested",
+    "verified_by": "code"
+  }
+]

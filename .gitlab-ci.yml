@@ -1,0 +1,126 @@
+# ---------------------------------------------------------------------------
+# Green Operations — OPTIMIZED pipeline
+#
+# Two isolated, measurable optimizations compared with ci/baseline.gitlab-ci.yml:
+#
+#   1. Dependency cache keyed on package-lock.json with a fallback key, so
+#      npm ci reuses downloaded packages across jobs and pipelines.
+#   2. rules:changes so lint/test/build are skipped for documentation-only
+#      changes. Secret detection ALWAYS runs. For any change touching code,
+#      configuration or dependencies, every required job still runs.
+#
+# Also: workflow:rules prevents duplicate branch + merge-request pipelines.
+#
+# Nothing here weakens quality or security coverage for code changes.
+# ---------------------------------------------------------------------------
+stages: [lint, test, build, security, evidence, deploy]
+
+default:
+  image: node:22-alpine
+  interruptible: true
+
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+# Avoid running both a branch pipeline and an MR pipeline for the same commit.
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+variables:
+  GREEN_OPS_ARM: "optimized"
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+# Paths that never affect lint/test/build results. Keep this list narrow.
+.docs_paths: &docs_paths
+  - "**/*.md"
+  - "docs/**/*"
+  - "LICENSE"
+  - ".gitlab/issue_templates/**/*"
+
+.node:
+  before_script:
+    - node --version
+    - npm ci --no-audit --no-fund --prefer-offline
+  cache:
+    key:
+      files: [package-lock.json]
+      prefix: npm
+    fallback_keys: [npm-default]
+    paths: [.npm/]
+    policy: pull
+
+# Run lint/test/build for everything EXCEPT docs-only changes.
+.code_rules: &code_rules
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    changes:
+      paths: *docs_paths
+      compare_to: $CI_MERGE_REQUEST_DIFF_BASE_SHA
+    when: never
+  - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA != "0000000000000000000000000000000000000000"
+    changes:
+      paths: *docs_paths
+    when: never
+  - when: on_success
+
+lint:
+  stage: lint
+  extends: .node
+  rules: *code_rules
+  script: npm run lint
+  # First job in the pipeline warms the cache for the rest.
+  cache:
+    key:
+      files: [package-lock.json]
+      prefix: npm
+    fallback_keys: [npm-default]
+    paths: [.npm/]
+    policy: pull-push
+
+test:
+  stage: test
+  extends: .node
+  rules: *code_rules
+  script: npm test
+
+build:
+  stage: build
+  extends: .node
+  rules: *code_rules
+  script: npm run build
+  artifacts:
+    paths: [dist/]
+    expire_in: 1 day
+
+# Security gate: always runs, regardless of which files changed.
+secret_detection:
+  stage: security
+  rules:
+    - when: always
+
+collect_evidence:
+  stage: evidence
+  extends: .node
+  when: always
+  script:
+    - node scripts/collect_evidence.mjs --arm "$GREEN_OPS_ARM"
+  artifacts:
+    paths: [evidence/runs/]
+    expire_in: 30 days
+
+# Publishes the Field Notes evidence page. Only reads committed evidence
+# files; it never fabricates data.
+pages:
+  stage: deploy
+  extends: .node
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - npm run evidence:all
+    - npm run site
+  artifacts:
+    paths: [public/]

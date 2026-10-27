@@ -1,0 +1,66 @@
+{
+  "baseline": {
+    "equation": "SCI = (E * I + M) / R",
+    "functional_unit": "one successful, equivalent CI pipeline run that validates the same change",
+    "rows": [
+      {
+        "symbol": "E",
+        "label": "Energy per functional unit (kWh)",
+        "value": "UNKNOWN",
+        "kind": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      {
+        "symbol": "I",
+        "label": "Grid carbon intensity (gCO2e/kWh)",
+        "value": "UNKNOWN",
+        "kind": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      {
+        "symbol": "M",
+        "label": "Embodied emissions allocated to the run (gCO2e)",
+        "value": "UNKNOWN",
+        "kind": "UNKNOWN",
+        "source": "UNKNOWN"
+      }
+    ],
+    "operational_gco2e": "UNKNOWN",
+    "sci_gco2e_per_run": "UNKNOWN",
+    "status": "not_calculated",
+    "message": "SCI not calculated: Energy per functional unit (kWh); Grid carbon intensity (gCO2e/kWh); Embodied emissions allocated to the run (gCO2e) unavailable."
+  },
+  "optimized": {
+    "equation": "SCI = (E * I + M) / R",
+    "functional_unit": "one successful, equivalent CI pipeline run that validates the same change",
+    "rows": [
+      {
+        "symbol": "E",
+        "label": "Energy per functional unit (kWh)",
+        "value": "UNKNOWN",
+        "kind": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      {
+        "symbol": "I",
+        "label": "Grid carbon intensity (gCO2e/kWh)",
+        "value": "UNKNOWN",
+        "kind": "UNKNOWN",
+        "source": "UNKNOWN"
+      },
+      {
+        "symbol": "M",
+        "label": "Embodied emissions allocated to the run (gCO2e)",
+        "value": "UNKNOWN",
+        "kind": "UNKNOWN",
+        "source": "UNKNOWN"
+      }
+    ],
+    "operational_gco2e": "UNKNOWN",
+    "sci_gco2e_per_run": "UNKNOWN",
+    "status": "not_calculated",
+    "message": "SCI not calculated: Energy per functional unit (kWh); Grid carbon intensity (gCO2e/kWh); Embodied emissions allocated to the run (gCO2e) unavailable."
+  },
+  "generated_at": "2026-10-27T10:36:07.141Z",
+  "inputs_file": null
+}

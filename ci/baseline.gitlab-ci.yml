@@ -1,0 +1,58 @@
+# ---------------------------------------------------------------------------
+# BASELINE pipeline (kept for reference and for reproducing baseline runs).
+#
+# This is the "before" configuration. It is deliberately ordinary:
+#   - no dependency cache (npm ci downloads everything on every job)
+#   - every job runs on every commit, including docs-only changes
+#   - branch pipelines and merge-request pipelines both run (duplicates)
+#
+# To reproduce a baseline run, copy this file over .gitlab-ci.yml on a
+# throwaway branch (see docs/DEMO.md). Do not merge it.
+# ---------------------------------------------------------------------------
+stages: [lint, test, build, security, evidence]
+
+default:
+  image: node:22-alpine
+  interruptible: true
+
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+variables:
+  GREEN_OPS_ARM: "baseline"
+
+.node:
+  before_script:
+    - node --version
+    - npm ci --no-audit --no-fund
+
+lint:
+  stage: lint
+  extends: .node
+  script: npm run lint
+
+test:
+  stage: test
+  extends: .node
+  script: npm test
+
+build:
+  stage: build
+  extends: .node
+  script: npm run build
+  artifacts:
+    paths: [dist/]
+    expire_in: 1 day
+
+secret_detection:
+  stage: security
+
+collect_evidence:
+  stage: evidence
+  extends: .node
+  when: always
+  script:
+    - node scripts/collect_evidence.mjs --arm "$GREEN_OPS_ARM"
+  artifacts:
+    paths: [evidence/runs/]
+    expire_in: 30 days
