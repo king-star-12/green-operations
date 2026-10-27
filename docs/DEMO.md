@@ -17,6 +17,10 @@
    `GITLAB_TOKEN=… CI_PROJECT_ID=<id> npm run evidence:collect -- --pipeline <id> --arm <baseline|optimized>`
 4. `npm run evidence:all && npm run site`, commit `evidence/`, push. Pages publishes `public/`.
 
+## Evidence hygiene
+
+Pipelines are `interruptible`, so a push to a branch cancels its older running pipelines. Let each evidence run finish before pushing or triggering the next one on the same branch.
+
 ## Recording
 
 Use a 1280×800 window, light theme, no notifications. Keep the cursor still while reading numbers.
