@@ -73,3 +73,9 @@ test("jobCounts and summarise count only what was recorded", () => {
   assert.equal(s.median_runner_minutes, 1.5);
   assert.equal(s.run_urls.length, 2);
 });
+
+test("deploy-only jobs are excluded from runner-minutes and counts", () => {
+  const jobs = [{ name: "lint", status: "success", duration_s: 60 }, { name: "pages", status: "success", duration_s: 600, cache: "miss" }];
+  assert.equal(runnerMinutes(jobs), 1);
+  assert.deepEqual(jobCounts({ jobs }), { executed: 1, skipped: 0, failed: 0, cache_hit: 0, cache_miss: 0 });
+});

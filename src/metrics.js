@@ -28,8 +28,19 @@ export function reductionPercent(baseline, optimized) {
  * Runner-minutes proxy: sum of job durations in minutes.
  * This is a PROXY for compute use, not an energy or carbon measurement.
  */
+/**
+ * Jobs outside the functional unit "validate the change": deployment of the
+ * evidence page is not part of validating a change and only exists on the
+ * default branch, so it is excluded from both arms.
+ */
+export const EXCLUDED_JOBS = new Set(["pages"]);
+
+export function measuredJobs(jobs) {
+  return jobs.filter((j) => !EXCLUDED_JOBS.has(j.name));
+}
+
 export function runnerMinutes(jobs) {
-  return jobs.reduce((acc, j) => acc + (Number.isFinite(j.duration_s) ? j.duration_s : 0), 0) / 60;
+  return measuredJobs(jobs).reduce((acc, j) => acc + (Number.isFinite(j.duration_s) ? j.duration_s : 0), 0) / 60;
 }
 
 /**
@@ -60,7 +71,7 @@ export function comparable(baseline, optimized, requiredJobs) {
 /** Count jobs by outcome for the pipeline trace. */
 export function jobCounts(run) {
   const counts = { executed: 0, skipped: 0, failed: 0, cache_hit: 0, cache_miss: 0 };
-  for (const j of run.jobs) {
+  for (const j of measuredJobs(run.jobs)) {
     if (j.status === "success") counts.executed += 1;
     else if (j.status === "skipped") counts.skipped += 1;
     else if (j.status === "failed") counts.failed += 1;

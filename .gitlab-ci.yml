@@ -37,7 +37,7 @@ variables:
 .node:
   before_script:
     - node --version
-    - npm ci --no-audit --no-fund --prefer-offline
+    - npm ci --cache "$CI_PROJECT_DIR/.npm" --prefer-offline --no-audit --no-fund
   cache:
     key:
       files: [package-lock.json]

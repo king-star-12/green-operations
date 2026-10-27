@@ -131,7 +131,24 @@ for (const j of jobsRaw) {
 }
 
 const sha = pipeline.sha;
-const changeClass = await detectChangeClass(pipeline);
+// Prefer what the pipeline itself decided (classify job artifact); otherwise
+// derive from the pushed range.
+let changeClass = null;
+let classBasis = null;
+const classifyJob = jobsRaw.find((j) => j.name === "classify" && j.status === "success");
+if (classifyJob) {
+  try {
+    const rec = await get(`/projects/${project}/jobs/${classifyJob.id}/artifacts/generated/classify.json`);
+    changeClass = rec.change_class;
+    classBasis = `classify job: ${rec.how}`;
+  } catch (err) {
+    console.warn(`classify artifact unavailable: ${err.message}`);
+  }
+}
+if (!changeClass) {
+  changeClass = await detectChangeClass(pipeline);
+  classBasis = args.class ? "override flag" : "collector: pushed range / commit diff";
+}
 const runnerClasses = [...new Set(jobs.map((j) => j.runner_class).filter((c) => c && c !== "UNKNOWN"))];
 
 const record = {
@@ -139,6 +156,7 @@ const record = {
   collected_at: new Date().toISOString(),
   arm,
   change_class: changeClass,
+  change_class_basis: classBasis,
   project: { id: projectInfo.id, path: projectInfo.path_with_namespace, web_url: projectInfo.web_url },
   id: pipeline.id,
   iid: pipeline.iid,
